@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: swan-dive-pdx
+    env: node
+    plan: free
+    buildCommand: bun install && bun run build
+    startCommand: bun run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production

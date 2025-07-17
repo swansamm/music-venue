@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  distDir: "out",
-  allowedDevOrigins: ["*.preview.same-app.com"],
   images: {
     unoptimized: true,
     domains: [
@@ -36,4 +33,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

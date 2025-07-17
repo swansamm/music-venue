@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  .filter-neon-orange {
+    filter: drop-shadow(0 0 20px rgba(251, 146, 60, 0.8)) drop-shadow(0 0 40px rgba(251, 146, 60, 0.4));
+  }
+
+  .filter-neon-teal {
+    filter: drop-shadow(0 0 20px rgba(20, 184, 166, 0.8)) drop-shadow(0 0 40px rgba(20, 184, 166, 0.4));
+  }
+
+  .text-glow-orange {
+    text-shadow: 0 0 20px rgba(251, 146, 60, 0.8), 0 0 40px rgba(251, 146, 60, 0.4), 0 0 60px rgba(251, 146, 60, 0.2);
+  }
+
+  .text-glow-teal {
+    text-shadow: 0 0 20px rgba(20, 184, 166, 0.8), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2);
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

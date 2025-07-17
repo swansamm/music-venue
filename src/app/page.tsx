@@ -1,101 +1,219 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getShows } from "@/lib/show-store";
-import { Show } from "@/lib/types";
-import { ShowCard } from "@/components/show-card";
-import { VENUE_INFO } from "@/lib/types";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+
+// Genre variations for the homepage
+const genreVariations = [
+  {
+    id: "electronic",
+    title: "Electronic Vibes",
+    background: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&h=1080&fit=crop&q=80",
+    backgroundMobile: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=768&h=1024&fit=crop&q=80",
+    accent: "text-teal-400",
+    description: "Cutting-edge electronic beats and synthesized soundscapes"
+  },
+  {
+    id: "jazz",
+    title: "Jazz Sessions",
+    background: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=1920&h=1080&fit=crop&q=80",
+    backgroundMobile: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=768&h=1024&fit=crop&q=80",
+    accent: "text-amber-400",
+    description: "Smooth jazz melodies and improvised performances"
+  },
+  {
+    id: "rock",
+    title: "Rock Energy",
+    background: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=1920&h=1080&fit=crop&q=80",
+    backgroundMobile: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=768&h=1024&fit=crop&q=80",
+    accent: "text-red-400",
+    description: "High-energy rock performances and electric guitar solos"
+  },
+  {
+    id: "indie",
+    title: "Indie Showcase",
+    background: "https://images.unsplash.com/photo-1501612780327-45045538702b?w=1920&h=1080&fit=crop&q=80",
+    backgroundMobile: "https://images.unsplash.com/photo-1501612780327-45045538702b?w=768&h=1024&fit=crop&q=80",
+    accent: "text-purple-400",
+    description: "Independent artists and alternative music experiences"
+  },
+  {
+    id: "acoustic",
+    title: "Intimate Shows",
+    background: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1920&h=1080&fit=crop&q=80",
+    backgroundMobile: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=768&h=1024&fit=crop&q=80",
+    accent: "text-green-400",
+    description: "Acoustic performances and storytelling through music"
+  }
+];
 
 export default function Home() {
-  const [shows, setShows] = useState<Show[]>([]);
+  const [currentGenre, setCurrentGenre] = useState(genreVariations[0]);
+  const [parallaxOffset, setParallaxOffset] = useState({ x: 0, y: 0 });
 
+  // Select random genre variation on mount
   useEffect(() => {
-    setShows(getShows());
+    const randomGenre = genreVariations[Math.floor(Math.random() * genreVariations.length)];
+    setCurrentGenre(randomGenre);
   }, []);
 
-  const upcomingShows = shows
-    .filter(show => new Date(show.date) >= new Date())
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  // Simple parallax effect on mouse move
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const { innerWidth, innerHeight } = window;
+
+      const offsetX = (clientX / innerWidth - 0.5) * 20;
+      const offsetY = (clientY / innerHeight - 0.5) * 20;
+
+      setParallaxOffset({ x: offsetX, y: offsetY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-teal-50">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900"></div>
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }}></div>
+    <div className="h-screen overflow-hidden">
+      {/* Full Screen Hero Section with Optimized Background */}
+      <div className="relative h-full">
+        {/* Optimized Background Image with Parallax */}
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-75 ease-out"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('${typeof window !== 'undefined' && window.innerWidth <= 768 ? currentGenre.backgroundMobile : currentGenre.background}')`,
+              transform: `translate(${parallaxOffset.x}px, ${parallaxOffset.y}px) scale(1.1)`
+            }}
+          />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight">
+        {/* Content Overlay */}
+        <div className="relative h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-8 max-w-6xl mx-auto">
+            <div className="space-y-8">
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight">
                 <span className="block">Swan Dive</span>
-                <span className="block text-teal-400">PDX</span>
+                <span className={`block ${currentGenre.accent}`}>PDX</span>
               </h1>
               <div className="max-w-3xl mx-auto">
-                <p className="text-xl md:text-2xl text-gray-200 font-light leading-relaxed">
-                  {VENUE_INFO.description}
+                <p className="text-2xl md:text-3xl text-gray-200 font-light leading-relaxed">
+                  Portland's premier live music venue featuring intimate performances and unforgettable nights.
                 </p>
               </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-300">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-teal-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                </svg>
-                <span>{VENUE_INFO.address}</span>
+              <div className="mt-8">
+                <p className={`text-xl md:text-2xl ${currentGenre.accent} font-medium`}>
+                  {currentGenre.title}
+                </p>
+                <p className="text-lg text-gray-300 mt-2">
+                  {currentGenre.description}
+                </p>
               </div>
-              <div className="hidden sm:block text-gray-500">•</div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-teal-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                </svg>
-                <span>{VENUE_INFO.phone}</span>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+                <Link href="/shows">
+                  <Button className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 text-lg font-semibold hover:scale-105 transition-transform">
+                    View Shows
+                  </Button>
+                </Link>
+                <Link href="/calendar">
+                  <Button variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg font-semibold hover:scale-105 transition-transform">
+                    Show Calendar
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Venue Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+                <div className="text-center">
+                  <div className={`text-3xl md:text-4xl font-bold ${currentGenre.accent}`}>500</div>
+                  <div className="text-sm md:text-base text-gray-300">Capacity</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl md:text-4xl font-bold ${currentGenre.accent}`}>8+</div>
+                  <div className="text-sm md:text-base text-gray-300">Years</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl md:text-4xl font-bold ${currentGenre.accent}`}>250+</div>
+                  <div className="text-sm md:text-base text-gray-300">Shows</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl md:text-4xl font-bold ${currentGenre.accent}`}>300+</div>
+                  <div className="text-sm md:text-base text-gray-300">Artists</div>
+                </div>
+              </div>
+
+              {/* Social Media Links */}
+              <div className="flex justify-center gap-6 mt-12">
+                <a
+                  href="https://facebook.com/swandivepdx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-teal-400 transition-all duration-300 hover:scale-125"
+                  aria-label="Follow us on Facebook"
+                >
+                  <Facebook className="w-8 h-8" />
+                </a>
+                <a
+                  href="https://instagram.com/swandivepdx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-teal-400 transition-all duration-300 hover:scale-125"
+                  aria-label="Follow us on Instagram"
+                >
+                  <Instagram className="w-8 h-8" />
+                </a>
+                <a
+                  href="https://twitter.com/swandivepdx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-teal-400 transition-all duration-300 hover:scale-125"
+                  aria-label="Follow us on Twitter"
+                >
+                  <Twitter className="w-8 h-8" />
+                </a>
+                <a
+                  href="https://youtube.com/@swandivepdx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-teal-400 transition-all duration-300 hover:scale-125"
+                  aria-label="Subscribe to our YouTube channel"
+                >
+                  <Youtube className="w-8 h-8" />
+                </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Decorative bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-16 text-gray-50" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M0,120 C120,100 240,80 480,80 C720,80 840,100 960,80 C1080,60 1120,80 1200,100 L1200,120 Z" fill="currentColor"></path>
-          </svg>
-        </div>
-      </div>
-
-      {/* Shows Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Upcoming Shows
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Experience live music like never before in Portland's most intimate venue
-          </p>
+        {/* Interactive Navigation Dots - Click to change genre */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+          {genreVariations.map((genre, index) => (
+            <button
+              key={genre.id}
+              onClick={() => setCurrentGenre(genre)}
+              className={`w-3 h-3 rounded-full transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 ${
+                genre.id === currentGenre.id
+                  ? `scale-125 ${currentGenre.accent.replace('text-', 'bg-')}`
+                  : 'bg-white/50 hover:bg-white/70'
+              }`}
+              aria-label={`Switch to ${genre.title}`}
+            />
+          ))}
         </div>
 
-        {upcomingShows.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-              </svg>
+        {/* Preload images for better performance */}
+        <div className="hidden">
+          {genreVariations.map((genre) => (
+            <div key={`preload-${genre.id}`}>
+              <img src={genre.background} alt="" />
+              <img src={genre.backgroundMobile} alt="" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">No Shows Scheduled</h3>
-            <p className="text-gray-500 text-lg">Check back soon for upcoming performances</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {upcomingShows.map((show) => (
-              <ShowCard key={show.id} show={show} />
-            ))}
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
