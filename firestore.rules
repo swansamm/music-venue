@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to shows for everyone
+    match /shows/{showId} {
+      allow read: if true;
+      // Only allow write access to authenticated admin users
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Admin user management (only for authenticated admins)
+    match /admins/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Venue info (read-only for public, write for admins)
+    match /venue/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<!-- Swan Dive PDX Logo -->
+<svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Swan outline -->
+  <path d="M30 45C30 45 25 40 20 42C15 44 12 50 15 55C18 60 25 58 30 55" stroke="#333" stroke-width="2" fill="none"/>
+  <path d="M30 45C30 45 35 35 45 30C55 25 65 28 70 35C75 42 72 50 65 52C58 54 50 50 45 45" stroke="#333" stroke-width="2" fill="none"/>
+  <path d="M45 45C45 45 55 40 65 42C75 44 80 50 78 55C76 60 70 58 65 55" stroke="#333" stroke-width="2" fill="none"/>
+
+  <!-- Swan head -->
+  <circle cx="18" cy="42" r="3" fill="#333"/>
+  <path d="M15 40C15 40 12 38 10 40" stroke="#FF6B35" stroke-width="2" fill="none"/>
+
+  <!-- Teal banner -->
+  <rect x="10" y="55" width="100" height="20" fill="#20B2AA" rx="2"/>
+
+  <!-- Text -->
+  <text x="35" y="68" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">SWAN DIVE</text>
+</svg>
